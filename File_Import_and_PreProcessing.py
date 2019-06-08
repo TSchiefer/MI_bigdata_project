@@ -11,6 +11,7 @@ File Import and Pre-Processing
 # %% general stuff
 import os
 import pandas as pd
+import getpass
 
 
 # %% file import
@@ -18,7 +19,10 @@ import pandas as pd
 # read the file line by line
 #FileName = 'amazom-meta_small.txt'
 FileName = 'amazon-meta.txt'
-FilePath = 'D:\\10-ZhAW\\3-MachineIntelligence\\4-BigData\\30_Projekt'
+if getpass.getuser() == 'Tobi':
+    FilePath = '/Users/Tobi/Documents/zu_CAS_Machine_Intelligence/project_big_data/'
+else:
+    FilePath = 'D:\\10-ZhAW\\3-MachineIntelligence\\4-BigData\\30_Projekt'
 
 FullPath = os.path.join(FilePath, FileName)
 
