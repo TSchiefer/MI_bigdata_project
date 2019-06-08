@@ -44,8 +44,8 @@ for line in content:
     # check for top level product info
     if not(metadata_flag):
         
-        if 'Id' in line:
-            temp = line.split('Id:')[1].strip(' ').strip('\n')
+        if 'Id: ' in line:
+            temp = line.split('Id: ')[1].strip(' ').strip('\n')
             id_no_temp = int(temp)
             try:
                 id_no.append(id_no_temp)
@@ -85,6 +85,14 @@ for line in content:
         
         if 'salesrank' in line:
             sr_t = line.split(': ')[1].strip('\n')
+            if (int(sr_t) <= 0) or (int(sr_t) > 5000):
+                # skip this product and remove last ASIN and id
+                metadata_flag = 0
+                del id_no[-1]
+                del ASIN[-1]
+                del Title[-1]
+                del Group[-1]
+                continue
             Salesrank.append(int(sr_t))
             continue
         
@@ -115,11 +123,24 @@ data_dict = {'Id': id_no, 'ASIN': ASIN, 'Group': Group, 'Salesrank': Salesrank,
 
 df = pd.DataFrame(data = data_dict)
 
-#df.to_csv('ProductData.csv', sep=';', header=True, index=False)
+#df.to_csv('ProductData_small.csv', sep=';', header=True, index=False)
 
+# in case of subset of data: correct dest-list to have only relations to available src data
+#dest2 = []
+#src2 = []
+#for i in range(0, len(dest)):
+#    if dest[i] in src:
+#        dest2.append(dest[i])
+#        src2.append(src[i])
+#src = src2
+#dest =dest2
+       
 link_dict = {'src': src, 'dest': dest}
 df_link = pd.DataFrame(data = link_dict)
 
-df_link.to_csv('LinkData.csv', sep=';', header=True, index=False)
+#df_link.to_csv('LinkData_small.csv', sep=';', header=True, index=False)
+
+
+
 
 
