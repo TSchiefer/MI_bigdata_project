@@ -125,7 +125,7 @@ data_dict = {'Id': id_no, 'ASIN': ASIN, 'Group': Group, 'Salesrank': Salesrank,
 
 df = pd.DataFrame(data = data_dict)
 
-#df.to_csv('ProductData_small.csv', sep=';', header=True, index=False)
+df.to_csv('ProductData_small.csv', sep=';', header=True, index=False)
 
 # in case of subset of data: correct dest-list to have only relations to available src data
 #dest2 = []
@@ -140,7 +140,7 @@ df = pd.DataFrame(data = data_dict)
 link_dict = {'src': src, 'dest': dest}
 df_link = pd.DataFrame(data = link_dict)
 
-#df_link.to_csv('LinkData_small.csv', sep=';', header=True, index=False)
+df_link.to_csv('LinkData_small.csv', sep=';', header=True, index=False)
 
 
 
