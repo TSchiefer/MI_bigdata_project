@@ -53,7 +53,6 @@ for line in content:
             id_no_temp = int(temp)
             try:
                 id_no.append(id_no_temp)
-                new_id = 1
     #            print('found new ID: {}'.format(id_no_temp))
             except:
                 print('Unable to store id-no. Perhaps wrong pattern detected')
@@ -62,7 +61,6 @@ for line in content:
         if 'ASIN' in line and not('cutomer' in line):
             temp = line.split(' ')[1].strip(' ').strip('\n')
             ASIN.append(temp)
-            new_asin = 1
             metadata_flag = 1
     #        print('found new ASIN: {}'.format(temp))
             continue
