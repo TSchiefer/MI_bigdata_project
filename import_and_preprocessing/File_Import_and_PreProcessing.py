@@ -11,6 +11,7 @@ File Import and Pre-Processing
 # %% general stuff
 import os
 import pandas as pd
+import getpass
 
 
 # %% file import
@@ -18,7 +19,10 @@ import pandas as pd
 # read the file line by line
 #FileName = 'amazom-meta_small.txt'
 FileName = 'amazon-meta.txt'
-FilePath = 'D:\\10-ZhAW\\3-MachineIntelligence\\4-BigData\\30_Projekt'
+if getpass.getuser() == 'Tobi':
+    FilePath = '/Users/Tobi/Documents/zu_CAS_Machine_Intelligence/project_big_data/'
+else:
+    FilePath = 'D:\\10-ZhAW\\3-MachineIntelligence\\4-BigData\\30_Projekt'
 
 FullPath = os.path.join(FilePath, FileName)
 
@@ -34,7 +38,6 @@ Group = []
 Salesrank = []
 Title = []
 Reviews = []
-avg_rating = []
 src = []
 dest = []
 
@@ -45,11 +48,12 @@ for line in content:
     # check for top level product info
     if not(metadata_flag):
         
-        if 'Id:' in line:
+        if 'Id: ' in line:
             temp = line.split('Id: ')[1].strip(' ').strip('\n')
             id_no_temp = int(temp)
             try:
                 id_no.append(id_no_temp)
+    #            print('found new ID: {}'.format(id_no_temp))
             except:
                 print('Unable to store id-no. Perhaps wrong pattern detected')
             continue
@@ -57,7 +61,6 @@ for line in content:
         if 'ASIN' in line and not('cutomer' in line):
             temp = line.split(' ')[1].strip(' ').strip('\n')
             ASIN.append(temp)
-#            new_asin = 1
             metadata_flag = 1
     #        print('found new ASIN: {}'.format(temp))
             continue
@@ -106,34 +109,38 @@ for line in content:
             dest.extend(dest_temp)
             continue
             
-        if 'reviews: ' in line:
-#            r_t = line.split('reviews: total: ')[1].split(' ')[0]
-            line_split = line.split('avg rating: ')
-            line_p1 = line_split[0]
-            line_p2 = line_split[1]
-            r_t = line_p1.split('reviews: total: ')[1].split(' ')[0]
-            ar_t = line_p2.strip('\n')
+        if 'reviews' in line:
+            r_t = line.split('reviews: total: ')[1].split(' ')[0]
             Reviews.append(int(r_t))
-            avg_rating.append(float(ar_t))
             metadata_flag = 0
+
+
 
 
 
 # %% create dataframe and export results
 
 data_dict = {'Id': id_no, 'ASIN': ASIN, 'Group': Group, 'Salesrank': Salesrank,
-      'Reviews': Reviews, 'avg rating': avg_rating, 'Title': Title}
+      'Reviews': Reviews, 'Title': Title}
 
 df = pd.DataFrame(data = data_dict)
 
-#df.to_csv('ProductData_small.csv', sep=';', header=True, index=False)
+df.to_csv('ProductData_small.csv', sep=';', header=True, index=False)
 
-
+# in case of subset of data: correct dest-list to have only relations to available src data
+#dest2 = []
+#src2 = []
+#for i in range(0, len(dest)):
+#    if dest[i] in src:
+#        dest2.append(dest[i])
+#        src2.append(src[i])
+#src = src2
+#dest =dest2
        
 link_dict = {'src': src, 'dest': dest}
 df_link = pd.DataFrame(data = link_dict)
 
-#df_link.to_csv('LinkData_small.csv', sep=';', header=True, index=False)
+df_link.to_csv('LinkData_small.csv', sep=';', header=True, index=False)
 
 
 
